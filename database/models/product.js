@@ -38,7 +38,7 @@ var ProductSchema = new mongoose.Schema({
 		type: Number
 	},
 	purity: {
-		type: Number
+		type: String
 	},
 	finish: {
 		type: String
@@ -52,7 +52,7 @@ var ProductSchema = new mongoose.Schema({
 	subcategory: {
 		type: String,
 		required: true,
-		enum: ['coin', 'bar', 'medal', 'other'],
+		enum: ['coin', 'bar', 'medal', 'note', 'other'],
 		default: 'other',
 	},
 	metal: {
