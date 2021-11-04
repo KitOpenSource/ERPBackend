@@ -56,6 +56,7 @@ router.post('/', auth, function(req, res, next) {
 	product.cnname = req.body.cnname;
 	product.country = req.body.country;
 	product.category = req.body.category;
+	prodcut.subcategory = req.body.subcategory;
 	product.metal = req.body.metal;
 	product.weight_au = req.body.weight_au;
 	product.weight_ag = req.body.weight_ag;
