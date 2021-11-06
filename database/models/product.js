@@ -13,11 +13,12 @@ var ProductSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	cnname: {
+	cname: {
 		type: String,
 	},
 	country: {
-		type: String
+		type: String,
+		default: 'other'
 	},
 	denomination: {
 		type: String
@@ -26,13 +27,14 @@ var ProductSchema = new mongoose.Schema({
 		type: Number
 	},
 	manufacturer: {
-		type: String
+		type: String,
+		default: 'other'
 	},
 	mintage: {
 		type: Number
 	},
 	diameter: {
-		type: Number
+		type: String
 	},
 	thickness: {
 		type: Number
@@ -75,8 +77,7 @@ var ProductSchema = new mongoose.Schema({
 	avg_cost: { type: Number, default: 0 },
 	premium_mode: {
 		type: Boolean,
-		default: false,
-		required: true
+		default: false
 	},
 	quote: {
 		type: [{
@@ -92,8 +93,7 @@ var ProductSchema = new mongoose.Schema({
         default: [{
         	quantity: 1,
         	price: 0
-        }],
-		required: true
+        }]
 	},
 	premium: {
 		type: [{
@@ -109,13 +109,11 @@ var ProductSchema = new mongoose.Schema({
         default: [{
         	quantity: 1,
         	price: 0
-        }],
-		required: true
+        }]
 	},
 	isActive: {
 		type: Boolean,
-		default: true,
-		required: true
+		default: true
 	}
 });
 
