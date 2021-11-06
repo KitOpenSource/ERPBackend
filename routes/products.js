@@ -40,7 +40,7 @@ router.get('/', auth
 , function(req, res, next) {
 	if (checkPremission(req.user, "admin") && checkPremission(req.user, "staff")) return res.sendStatus(401);
 	
-	Product.find(function (err, products) {
+	Product.find().sort({ pid: 1}).exec(function (err, products) {
 		if (err) {return next(err);}
 		// console.log(products);
 		res.json(products);
