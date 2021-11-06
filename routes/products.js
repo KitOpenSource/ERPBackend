@@ -25,6 +25,17 @@ router.param('productId', function(req, res, next, uid) {
 	});
 });
 
+router.get('/newpid', auth, function(req, res, next){
+	if (checkPremission(req.user, "admin") && checkPremission(req.user, "staff")) return res.sendStatus(401);
+	Product.findOne().sort({ pid: -1}).exec(function(err, product) {
+		if (err) {return next(err);}
+		var newPid = Number(product.pid)+1;
+
+		return res.json(newPid.toString());
+	});
+
+});
+
 router.get('/', auth
 , function(req, res, next) {
 	if (checkPremission(req.user, "admin") && checkPremission(req.user, "staff")) return res.sendStatus(401);
