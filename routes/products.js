@@ -42,7 +42,6 @@ router.get('/', auth
 	
 	Product.find().sort({ pid: 1}).exec(function (err, products) {
 		if (err) {return next(err);}
-		// console.log(products);
 		res.json(products);
 	});
 });
@@ -61,9 +60,6 @@ router.post('/', auth, function(req, res, next) {
 	}
 
 	var product = new Product();
-
-	console.log(req.body);
-
 	product.pid = req.body.pid;
 	product.name = req.body.name;
 	product.cname = req.body.cname;
@@ -101,11 +97,8 @@ router.post('/', auth, function(req, res, next) {
 
 router.post('/multi', auth, function(req, res, next) {
 	if (checkPremission(req.user, "admin")) return res.sendStatus(401);
-	console.log(req.body);
-	console.log("<=================>");
 	Product.insertMany(req.body)
 	.then(products => {
-		console.log(products);
 		return res.json(products);
 	}).catch(err => {
 		if (err.name === 'MongoServerError' && err.code === 11000) next(new Error('There was a duplicate key error'));
