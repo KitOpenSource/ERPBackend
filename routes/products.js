@@ -99,6 +99,20 @@ router.post('/', auth, function(req, res, next) {
 	});
 });
 
+router.post('/multi', auth, function(req, res, next) {
+	if (checkPremission(req.user, "admin")) return res.sendStatus(401);
+	console.log(req.body);
+	console.log("<=================>");
+	Product.insertMany(req.body)
+	.then(products => {
+		console.log(products);
+		return res.json(products);
+	}).catch(err => {
+		if (err.name === 'MongoServerError' && err.code === 11000) next(new Error('There was a duplicate key error'));
+		else next(err); 
+	});
+});
+
 router.put('/:productId', auth, function(req, res, next){
 	if (checkPremission(req.user, "admin")) return res.sendStatus(401);
 	Product.findOneAndUpdate( {'_id': req.info._id} , {$set: req.body })
@@ -115,8 +129,7 @@ router.delete('/:productId', auth, function (req, res, next) {
 	Product.findOneAndUpdate( {'_id': req.info._id} , {$set: {isActive: false} })
 		.then(product => res.send(product))
 		.catch(err => {
-			if (err.name === 'MongoServerError' && err.code === 11000) next(new Error('There was a duplicate key error'));
-			else next(err); 
+			next(err); 
 		});
 	
 });
