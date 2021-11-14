@@ -9,6 +9,10 @@ var ProductSchema = new mongoose.Schema({
 		unique: true,
 		required: true
 	},
+	imgUrl: {
+		type: String,
+		default: 'http://localhost:3000/image/uploadedImage-default.jpg'
+	},
 	name: {
 		type: String,
 		required: true,

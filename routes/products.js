@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+const multer = require('multer');
+var cors = require('cors');
+var fileExtension = require('file-extension');
 
 var passport = require('passport');
 var mongoose = require('mongoose');
@@ -125,6 +128,57 @@ router.delete('/:productId', auth, function (req, res, next) {
 			next(err); 
 		});
 	
+});
+
+// Configure Storage
+var storage = multer.diskStorage({
+
+    // Setting directory on disk to save uploaded files
+    destination: function (req, file, cb) {
+        cb(null, 'my_uploaded_files')
+    },
+
+    // Setting name of file saved
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + '.' + fileExtension(file.originalname))
+    }
+});
+
+var upload = multer({
+    storage: storage,
+    limits: {
+        // Setting Image Size Limit to 2MBs
+        fileSize: 2000000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            //Error 
+            cb(new Error('Please upload JPG and PNG images only!'))
+        }
+        //Success 
+        cb(undefined, true)
+    }
+});
+
+router.post('/:productId/uploadfile', upload.single('uploadedImage'), (req, res, next) => {
+    const file = req.file
+    console.log(file);
+    if (!file) {
+        const error = new Error('Please upload a file')
+        error.httpStatusCode = 400
+        return next(error)
+    }
+	Product.findOneAndUpdate({'_id': req.info._id}, 
+		{$set: {imgUrl: 'http://localhost:3000/image/'+file.filename}}
+		, {new: true})
+		.then(product => res.status(200).send(product))
+		.catch(err => {
+			res.status(400).send({
+				error: err.message
+			})
+		})
+   
+
 });
 
 module.exports = router;

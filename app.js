@@ -3,6 +3,7 @@ const mongoose = require('./database/mongoose');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 var passport = require('passport');
+fs = require('fs');
 
 const List = require('./database/models/list');
 const Task = require('./database/models/task');
@@ -106,6 +107,24 @@ app.delete('/lists/:listId/tasks/:taskId', (req, res) => {
 		.catch((error) => console.log(error));
 });
 
-
+app.get('/image/:imgUrl', (req, res, next) => {
+	fs.readFile(`my_uploaded_files/${req.params.imgUrl}`, function (err, content) {
+        if (err) {
+            res.writeHead(400, {'Content-type':'text/html'})
+            console.log(err);
+            res.end("No such image");    
+        } else {
+            //specify the content type in the response will be an image
+			if (req.params.imgUrl.match(/\.(jpg|jpeg)$/)) {
+				res.writeHead(200,{'Content-type':'image/jpg'});
+            	res.end(content);
+			} else {
+				res.writeHead(200,{'Content-type':'image/png'});
+            	res.end(content);
+			}
+            
+        }
+    });
+});
 
 app.listen(3000, () => console.log("server Connected on port 3000"));
